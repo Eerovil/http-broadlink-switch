@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 import broadlink
 
-hostName = "localhost"
+hostName = "0.0.0.0"
 serverPort = 8123
 
 class MyServer(BaseHTTPRequestHandler):
