@@ -1,7 +1,7 @@
 # Python 3 server example
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
 import broadlink
+import json
 
 hostName = "0.0.0.0"
 serverPort = 8123
@@ -13,9 +13,10 @@ class MyServer(BaseHTTPRequestHandler):
         elif self.path == '/off':
             self.off()
         self.send_response(200)
-        self.send_header("Content-type", "text/plain")
+        # JSON data
+        self.send_header("Content-type", "application/json")
         self.end_headers()
-        self.wfile.write(bytes(self.get_state(), "utf-8"))
+        self.wfile.write(bytes(json.dumps(self.get_state()), "utf-8"))
 
     def do_POST(self):
         body = self.rfile.read(int(self.headers['Content-Length']))
@@ -25,9 +26,10 @@ class MyServer(BaseHTTPRequestHandler):
         elif body == b'OFF':
             self.off()
         self.send_response(200)
-        self.send_header("Content-type", "text/plain")
+        # JSON data
+        self.send_header("Content-type", "application/json")
         self.end_headers()
-        self.wfile.write(bytes(self.get_state(), "utf-8"))
+        self.wfile.write(bytes(json.dumps(self.get_state()), "utf-8"))
 
     def get_device(self):
         device = broadlink.hello('192.168.100.109')
@@ -46,7 +48,7 @@ class MyServer(BaseHTTPRequestHandler):
 
     def get_state(self):
         device = self.get_device()
-        return 'on' if device.check_power() else 'off'
+        return {"is_active": device.check_power()}
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)
