@@ -21,6 +21,21 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes("<p>OK</p>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
+    def do_POST(self):
+        body = self.rfile.read(int(self.headers['Content-Length']))
+        if body == 'ON':
+            self.on()
+        elif body == 'OFF':
+            self.off()
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(bytes("<html><head><title>https://pythonbasics.org</title></head>", "utf-8"))
+        self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
+        self.wfile.write(bytes("<body>", "utf-8"))
+        self.wfile.write(bytes("<p>OK</p>", "utf-8"))
+        self.wfile.write(bytes("</body></html>", "utf-8"))
+
     def get_device(self):
         device = broadlink.hello('192.168.100.109')
         device.auth()
