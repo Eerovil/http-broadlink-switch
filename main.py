@@ -23,9 +23,10 @@ class MyServer(BaseHTTPRequestHandler):
 
     def do_POST(self):
         body = self.rfile.read(int(self.headers['Content-Length']))
-        if body == 'ON':
+        print(body)
+        if body == b'ON':
             self.on()
-        elif body == 'OFF':
+        elif body == b'OFF':
             self.off()
         self.send_response(200)
         self.send_header("Content-type", "text/html")
